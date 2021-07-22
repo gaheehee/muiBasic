@@ -4,6 +4,7 @@ import {Card, CardContent, CardActions, Typography, IconButton} from '@material-
 import {Favorite, FavoriteBorder} from '@material-ui/icons';
 
 import firebase from './firebase';
+import SnackbarMsg from './snackmsg';
 
 const styles = theme => ({
     content : {},
@@ -27,7 +28,8 @@ class MusicList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            likes : {}
+            likes : {},
+            snackbar : {},
         };
     }
 
@@ -63,8 +65,16 @@ class MusicList extends React.Component {
         } */
 
 
-        this.setState({likes});
+        this.setState({likes, snackbar : {open : true, msg : `id ${id} clicked`}});
     }
+
+    handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+          }
+      
+          this.setState({snackbar : {open : false, msg : ''}});
+    }       
 
     render () {
         const {classes} = this.props;
@@ -84,6 +94,7 @@ class MusicList extends React.Component {
                         </CardActions>
                     </Card>)
                 })}
+                <SnackbarMsg open={this.state.snackbar.open} message={this.state.snackbar.msg} onClose={this.handleSnackbarClose}></SnackbarMsg>
             </div>
         );
     }
